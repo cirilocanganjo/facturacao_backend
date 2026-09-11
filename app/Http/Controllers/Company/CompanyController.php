@@ -136,4 +136,10 @@ class CompanyController extends Controller
             'message' => 'Empresa eliminada com sucesso',
         ]);
     }
+
+
+    public function storeCompanyAccount ()
+    {
+        dd('here');
+    }
 }
