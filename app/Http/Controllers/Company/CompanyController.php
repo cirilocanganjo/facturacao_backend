@@ -5,7 +5,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use App\Http\Requests\Client\StoreCompanyRequest;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 class CompanyController extends Controller
 {
@@ -140,37 +143,47 @@ class CompanyController extends Controller
     }
 
     public function storeCompanyAccount(StoreCompanyRequest $request)
-{
-    $photoPath = null;
+    {
+        $photoPath = null;
 
-    try {
-        $company = DB::transaction(function () use ($request, &$photoPath) {
+        try {
+            $company = DB::transaction(function () use ($request, &$photoPath) {
 
-            $data = $request->except('photo');
+                $data = $request->except('photo');
 
-            if ($request->hasFile('photo')) {
-                $photoPath = $request->file('photo')->store('companies', 'public');
-                $data['photo'] = $photoPath;
+                if ($request->hasFile('photo')) {
+                    $photoPath = $request->file('photo')->store('img', 'public');
+                    $data['photo'] = $photoPath;
+                }
+
+                $newCompany =  Company::create($data);
+                
+                $role_user_client_id = Role::query()->whereIn('role',['Cliente', 'cliente'])->value('id');
+                User::create([
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'role_id' => $role_user_client_id,
+                    'company_id' => $newCompany->id
+                ]);
+
+                return $newCompany;
+            });
+
+            return response()->json([
+                'message' => 'A sua empresa foi cadastrada com sucesso e aguarda por aprovação.',
+                'data' => $company,
+            ], 201);
+
+        } catch (\Throwable $e) {
+
+            if ($photoPath) {
+                Storage::disk('public')->delete($photoPath);
             }
 
-            return Company::create($data);
-        });
-
-        return response()->json([
-            'message' => 'A sua empresa foi cadastrada com sucesso e aguarda por aprovação.',
-            'data' => $company,
-        ], 201);
-
-    } catch (\Throwable $e) {
-
-        if ($photoPath) {
-            Storage::disk('public')->delete($photoPath);
+            return response()->json([
+                'message' => 'Erro ao criar a empresa',
+            ], 500);
         }
-
-        return response()->json([
-            'message' => 'Erro ao criar a empresa',
-        ], 500);
-    }
 
     }
 
