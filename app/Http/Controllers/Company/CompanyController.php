@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Company;
 use App\Http\Controllers\Controller;
 use App\Models\Company;
 use Illuminate\Http\Request;
-
+use App\Http\Requests\Client\StoreCompanyRequest;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 class CompanyController extends Controller
 {
     /**
@@ -137,9 +139,41 @@ class CompanyController extends Controller
         ]);
     }
 
+    public function storeCompanyAccount(StoreCompanyRequest $request)
+{
+    $photoPath = null;
 
-    public function storeCompanyAccount ()
-    {
-        dd('here');
+    try {
+        $company = DB::transaction(function () use ($request, &$photoPath) {
+
+            $data = $request->except('photo');
+
+            if ($request->hasFile('photo')) {
+                $photoPath = $request->file('photo')->store('companies', 'public');
+                $data['photo'] = $photoPath;
+            }
+
+            return Company::create($data);
+        });
+
+        return response()->json([
+            'message' => 'A sua empresa foi cadastrada com sucesso e aguarda por aprovação.',
+            'data' => $company,
+        ], 201);
+
+    } catch (\Throwable $e) {
+
+        if ($photoPath) {
+            Storage::disk('public')->delete($photoPath);
+        }
+
+        return response()->json([
+            'message' => 'Erro ao criar a empresa',
+        ], 500);
     }
+
+    }
+
+
+    
 }
