@@ -17,7 +17,7 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => 'Lista de produtos',
-            'data'    => $products,
+            'data' => $products,
         ]);
     }
 
@@ -36,22 +36,22 @@ class ProductController extends Controller
         ], [
             'description.required' => 'A descrição do produto é obrigatória',
             'category_id.required' => 'A categoria é obrigatória',
-            'category_id.exists'   => 'A categoria selecionada não existe',
-            'company_id.required'  => 'A empresa é obrigatória',
-            'company_id.exists'    => 'A empresa selecionada não existe',
-            'unit_price.required'  => 'O preço unitário é obrigatório',
-            'unit_price.numeric'   => 'O preço unitário deve ser um número',
-            'unit_price.min'       => 'O preço unitário não pode ser negativo',
-            'tax_rate.integer'     => 'A taxa de imposto deve ser um número inteiro',
-            'tax_rate.min'         => 'A taxa de imposto não pode ser negativa',
-            'tax_rate.max'         => 'A taxa de imposto não pode ser superior a 100',
+            'category_id.exists' => 'A categoria selecionada não existe',
+            'company_id.required' => 'A empresa é obrigatória',
+            'company_id.exists' => 'A empresa selecionada não existe',
+            'unit_price.required' => 'O preço unitário é obrigatório',
+            'unit_price.numeric' => 'O preço unitário deve ser um número',
+            'unit_price.min' => 'O preço unitário não pode ser negativo',
+            'tax_rate.integer' => 'A taxa de imposto deve ser um número inteiro',
+            'tax_rate.min'  => 'A taxa de imposto não pode ser negativa',
+            'tax_rate.max' => 'A taxa de imposto não pode ser superior a 100',
         ]);
 
         $product = Product::create($validated);
 
         return response()->json([
             'message' => 'Produto criado com sucesso',
-            'data'    => $product->load(['category', 'company']),
+            'data' => $product->load(['category', 'company']),
         ], 201);
     }
 
@@ -70,7 +70,7 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => 'Detalhes do produto',
-            'data'    => $product,
+            'data' => $product,
         ]);
     }
 
@@ -91,21 +91,21 @@ class ProductController extends Controller
             'description' => 'sometimes|required|string|max:255',
             'category_id' => 'sometimes|required|exists:categories,id',
             'company_id'  => 'sometimes|required|exists:companies,id',
-            'unit_price'  => 'sometimes|required|numeric|min:0',
-            'tax_rate'    => 'nullable|integer|min:0|max:100',
-            'unit'        => 'nullable|string|max:255',
+            'unit_price' => 'sometimes|required|numeric|min:0',
+            'tax_rate' => 'nullable|integer|min:0|max:100',
+            'unit' => 'nullable|string|max:255',
         ], [
             'description.required' => 'A descrição do produto é obrigatória',
             'category_id.required' => 'A categoria é obrigatória',
-            'category_id.exists'   => 'A categoria selecionada não existe',
-            'company_id.required'  => 'A empresa é obrigatória',
-            'company_id.exists'    => 'A empresa selecionada não existe',
-            'unit_price.required'  => 'O preço unitário é obrigatório',
-            'unit_price.numeric'   => 'O preço unitário deve ser um número',
-            'unit_price.min'       => 'O preço unitário não pode ser negativo',
-            'tax_rate.integer'     => 'A taxa de imposto deve ser um número inteiro',
-            'tax_rate.min'         => 'A taxa de imposto não pode ser negativa',
-            'tax_rate.max'         => 'A taxa de imposto não pode ser superior a 100',
+            'category_id.exists'  => 'A categoria selecionada não existe',
+            'company_id.required' => 'A empresa é obrigatória',
+            'company_id.exists' => 'A empresa selecionada não existe',
+            'unit_price.required' => 'O preço unitário é obrigatório',
+            'unit_price.numeric' => 'O preço unitário deve ser um número',
+            'unit_price.min' => 'O preço unitário não pode ser negativo',
+            'tax_rate.integer' => 'A taxa de imposto deve ser um número inteiro',
+            'tax_rate.min' => 'A taxa de imposto não pode ser negativa',
+            'tax_rate.max' => 'A taxa de imposto não pode ser superior a 100',
         ]);
 
         $product->update($validated);

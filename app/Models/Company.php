@@ -15,7 +15,9 @@ use Illuminate\Database\Eloquent\Model;
     'tax_regime',
     'invoice_prefix',
     'status'
-])]
+])
+
+]
 
 class Company extends Model
 {

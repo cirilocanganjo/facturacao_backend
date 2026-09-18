@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('logo');
             $table->string('tax_regime');
-            $table->string('invoice_prefix');
+            $table->string('invoice_prefix')->nullable();
             $table->timestamps();
         });
     }

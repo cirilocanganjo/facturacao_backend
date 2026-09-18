@@ -13,8 +13,6 @@ use App\Http\Controllers\Product\ProductController;
 
         });
 
-
-
         // Protected routes
         Route::middleware(['auth:sanctum'])->group(function () {
 

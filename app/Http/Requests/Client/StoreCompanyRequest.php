@@ -28,9 +28,10 @@ class StoreCompanyRequest extends FormRequest
             'address' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:companies,email',
-            'logo' => 'nullable|string|max:255',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB',
             'tax_regime' => 'required|string|max:255',
-            'invoice_prefix' => 'required|string|max:255',
+            'invoice_prefix' => 'nullable|string|max:255',
+            'password' => 'required|min:6',
         ];
     } 
 
@@ -38,15 +39,36 @@ class StoreCompanyRequest extends FormRequest
     {
         return [
             'name.required' => 'O nome da empresa é obrigatório',
+            'name.string' => 'O nome da empresa deve ser uma string válida',
+            'name.max' => 'O nome da empresa deve ter no máximo 255 caracteres',
+
             'nif.required'  => 'O NIF é obrigatório',
             'nif.unique'  => 'Este NIF já está registado',
+            'nif.string'  => 'O NIF deve ser uma string válida',
+            'nif.max' => 'O NIF deve ter no máximo 255 caracteres',
+
             'address.required' => 'A morada é obrigatória',
+            'address.max' => 'A morada deve ter no máximo 255 caracteres',
+           
             'phone.required' => 'O telefone é obrigatório',
+            'phone.max' => 'O telefone deve ter no máximo 255 caracteres',
+
             'email.required' => 'O email é obrigatório',
             'email.email' => 'O email informado não é válido',
             'email.unique' => 'Este email já está registado',
+            'email.max' => 'O email deve ter no máximo 255 caracteres',
+
             'tax_regime.required' => 'O regime fiscal é obrigatório',
-            'invoice_prefix.required' => 'O prefixo da fatura é obrigatório',
+            'tax_regime.string' => 'O regime fiscal deve ser uma string válida',
+
+            'invoice_prefix.string' => 'O prefixo da fatura deve ser uma string válida',
+            
+            'logo.max' => 'O logotipo deve ter no máximo 5MB',
+            'logo.image' => 'O logotipo deve ser um ficheiro válido',
+            'logo.mimes' => 'O logotipo deve ter um formato de imagem válido',
+            
+            'password.required' => 'A senha é obrigatória',
+            'password.min' => 'A senha deve ter no mínimo 6 caracteres',
         ];
     }
 }
