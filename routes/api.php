@@ -10,26 +10,22 @@ use App\Http\Controllers\Product\ProductController;
         //Public routes
         Route::group(['prefix' => 'client'], function () {
             Route::post('/company-create-account', [CompanyController::class, 'storeCompanyAccount']);
-
         });
+
 
         // Protected routes
         Route::middleware(['auth:sanctum'])->group(function () {
 
-        Route::prefix('auth')->group(function() {
-        Route::post('/login', [AuthController::class, 'login']);
+            Route::apiResource('companies', CompanyController::class);
+            Route::apiResource('products', ProductController::class);
 
-        Route::get('/me', [AuthController::class, 'me']);
-        Route::post('/logout', [AuthController::class, 'logout']);
-        Route::post('/logout-all', [AuthController::class, 'logoutAll']);
-
-      
-        });
-
-        Route::apiResource('companies', CompanyController::class);  
-        Route::apiResource('products', ProductController::class);
 
         });
+
+
+        require __DIR__ . '/auth/routes.php';
+        require __DIR__ . '/admin/routes.php';
+
 
 
 
