@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use App\Http\Requests\Client\StoreCompanyRequest;
+use App\Http\Requests\Company\UpdateCompanyDetailRequest;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -13,8 +14,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 class CompanyController extends Controller
 {
-      
- 
+
+
 
     public function storeCompanyAccount(StoreCompanyRequest $request) : JsonResponse
     {
@@ -62,6 +63,44 @@ class CompanyController extends Controller
             ], 500);
         }
 
+    }
+
+
+    public function getAuthenticatedCompanyDetails (): JsonResponse
+    {
+        $company = auth()->user()->company;
+
+        return response()->json([
+          'data' => $company
+        ]);
+    }
+
+    public function updateAuthenticatedCompanyDetails (UpdateCompanyDetailRequest $request): JsonResponse
+    {
+        $id = $id ?? auth()->user()->company->id;
+        $company = auth()->user()->company;
+
+        if ($company->id != $id) {
+            return response()->json([
+                'message' => 'Você não tem permissão para atualizar os detalhes desta empresa.',
+            ], 403);
+        }
+
+        $data = $request->except('logo');
+
+        if ($request->hasFile('logo')) {
+            Storage::disk('public')->delete($company->logo);
+
+            $photoPath = $request->file('logo')->store('img', 'public');
+            $data['logo'] = $photoPath;
+        }
+
+        $company->update($data);
+
+        return response()->json([
+            'message' => 'Os dados da sua empresa foram atualizados com sucesso.',
+            'data' => $company,
+        ]);
     }
 
 

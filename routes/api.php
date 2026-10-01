@@ -25,6 +25,8 @@ use App\Http\Controllers\Product\ProductController;
 
         require __DIR__ . '/auth/routes.php';
         require __DIR__ . '/admin/routes.php';
+        require __DIR__ . '/company/routes.php';
+
 
 
 

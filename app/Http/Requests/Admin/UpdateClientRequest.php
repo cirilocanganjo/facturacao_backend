@@ -32,7 +32,6 @@ class UpdateClientRequest extends FormRequest
             ],
 
             'address' => 'required|string|max:255',
-
             'phone' => 'required|string|max:255',
 
             'email' => [
